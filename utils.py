@@ -31,7 +31,13 @@ def train_notifier(msg=None):
     else:
         send_slack("学習を開始します", ":robot_face:")
 
-    yield
+    try:
+        yield
+    except:
+        if msg is not None:
+            send_slack("{}の学習が失敗しました".format(msg), ":robot_face:")
+        else:
+            send_slack("学習が失敗しました", ":robot_face:")
 
     if msg is not None:
         send_slack("{}の学習が完了しました".format(msg), ":robot_face:")
