@@ -5,8 +5,9 @@ import yaml
 import socket
 from contextlib import contextmanager
 
-def send_slack(content, emoji, image=None):
-    SLACK_CONFIG = Path(__file__).resolve().parents[0]/'slack_conf.yaml'
+
+def send_slack(content, emoji=":robot_face:", image=None):
+    SLACK_CONFIG = Path(__file__).resolve().parents[1]/'config/slack_conf.yaml'
     with open(str(SLACK_CONFIG)) as f:
         config = yaml.safe_load(f)
 
@@ -27,22 +28,22 @@ def get_host_ip():
 @contextmanager
 def train_notifier(msg=None):
     if msg is not None:
-        send_slack("{}の学習を開始します".format(msg), ":robot_face:")
+        send_slack("{}の学習を開始します".format(msg))
     else:
-        send_slack("学習を開始します", ":robot_face:")
+        send_slack("学習を開始します")
 
     try:
         yield
     except:
         if msg is not None:
-            send_slack("{}の学習が失敗しました".format(msg), ":robot_face:")
+            send_slack("{}の学習が失敗しました".format(msg))
         else:
-            send_slack("学習が失敗しました", ":robot_face:")
+            send_slack("学習が失敗しました")
 
     if msg is not None:
-        send_slack("{}の学習が完了しました".format(msg), ":robot_face:")
+        send_slack("{}の学習が完了しました".format(msg))
     else:
-        send_slack("学習が完了しました", ":robot_face:")
+        send_slack("学習が完了しました")
 
 
 if __name__ == "__main__":
