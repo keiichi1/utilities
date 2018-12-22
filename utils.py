@@ -5,13 +5,13 @@ import yaml
 import socket
 from contextlib import contextmanager
 
-def send_slack(content, emoji, image=False):
+def send_slack(content, emoji, image=None):
     SLACK_CONFIG = Path(__file__).resolve().parents[0]/'slack_conf.yaml'
     with open(str(SLACK_CONFIG)) as f:
         config = yaml.safe_load(f)
 
     url = config["url"]
-    if image:
+    if image is not None:
         payload = dict(text=content, icon_emoji=emoji, files=image)
     else:
         payload = dict(text=content, icon_emoji=emoji)
