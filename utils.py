@@ -26,24 +26,24 @@ def get_host_ip():
 
 
 @contextmanager
-def train_notifier(msg=None):
+def slack_notifier(msg=None):
     if msg is not None:
-        send_slack("{}の学習を開始します".format(msg))
+        send_slack("{}を開始します".format(msg))
     else:
-        send_slack("学習を開始します")
+        send_slack("開始します")
 
     try:
         yield
     except:
         if msg is not None:
-            send_slack("{}の学習が失敗しました".format(msg))
+            send_slack("{}が失敗しました".format(msg))
         else:
-            send_slack("学習が失敗しました")
+            send_slack("失敗しました")
 
     if msg is not None:
-        send_slack("{}の学習が完了しました".format(msg))
+        send_slack("{}が完了しました".format(msg))
     else:
-        send_slack("学習が完了しました")
+        send_slack("完了しました")
 
 
 if __name__ == "__main__":
