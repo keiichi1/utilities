@@ -3,7 +3,7 @@ import json
 import requests
 import yaml
 import socket
-
+from contextlib import contextmanager
 
 def send_slack(content, emoji, image=False):
     SLACK_CONFIG = Path(__file__).resolve().parents[0]/'slack_conf.yaml'
@@ -22,6 +22,21 @@ def send_slack(content, emoji, image=False):
 
 def get_host_ip():
     return socket.gethostbyname(socket.gethostname())
+
+
+@contextmanager
+def train_notifier(msg=None):
+    if msg is not None:
+        send_slack("{}の学習を開始します".format(msg), ":robot_face:")
+    else:
+        send_slack("学習を開始します", ":robot_face:")
+
+    yield
+
+    if msg is not None:
+        send_slack("{}の学習が完了しました".format(msg), ":robot_face:")
+    else:
+        send_slack("学習が完了しました", ":robot_face:")
 
 
 if __name__ == "__main__":
