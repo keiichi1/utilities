@@ -22,28 +22,27 @@ def send_slack(content, emoji=":robot_face:", image=None):
         requests.post(url, data)
 
 
-
 def get_host_ip():
     return socket.gethostbyname(socket.gethostname())
 
 
 @contextmanager
-def train_notifier(msg=None):
-    if msg is not None:
-        send_slack("{}の学習を開始します".format(msg))
+def train_notifier(title=None):
+    if title is not None:
+        send_slack("{}の学習を開始します".format(title))
     else:
         send_slack("学習を開始します")
 
     try:
         yield
     finally:
-        if msg is not None:
-            send_slack("{}の学習が失敗しました".format(msg))
+        if title is not None:
+            send_slack("{}の学習が失敗しました".format(title))
         else:
             send_slack("学習が失敗しました")
 
-    if msg is not None:
-        send_slack("{}の学習が完了しました".format(msg))
+    if title is not None:
+        send_slack("{}の学習が完了しました".format(title))
     else:
         send_slack("学習が完了しました")
 
