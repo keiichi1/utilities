@@ -13,12 +13,14 @@ def send_slack(content, emoji=":robot_face:", image=None):
 
     url = config["url"]
     if image is not None:
-        payload = dict(text=content, icon_emoji=emoji, files=image)
+        param = dict(token=config["token"], channels=config["channel"])
+        files = dict(file=open(image, 'rb'))
+        requests.post(url="https://slack.com/api/files.upload",params=param, files=files)
     else:
         payload = dict(text=content, icon_emoji=emoji)
+        data = json.dumps(payload)
+        requests.post(url, data)
 
-    data = json.dumps(payload)
-    requests.post(url, data)
 
 
 def get_host_ip():
@@ -26,26 +28,27 @@ def get_host_ip():
 
 
 @contextmanager
-def slack_notifier(msg=None):
+def train_notifier(msg=None):
     if msg is not None:
-        send_slack("{}を開始します".format(msg))
+        send_slack("{}の学習を開始します".format(msg))
     else:
-        send_slack("開始します")
+        send_slack("学習を開始します")
 
     try:
         yield
-    except:
+    finally:
         if msg is not None:
-            send_slack("{}が失敗しました".format(msg))
+            send_slack("{}の学習が失敗しました".format(msg))
         else:
-            send_slack("失敗しました")
+            send_slack("学習が失敗しました")
 
     if msg is not None:
-        send_slack("{}が完了しました".format(msg))
+        send_slack("{}の学習が完了しました".format(msg))
     else:
-        send_slack("完了しました")
+        send_slack("学習が完了しました")
 
 
 if __name__ == "__main__":
     hostip = get_host_ip()
     send_slack("{}から送信テスト".format(hostip), ":+1:")
+
