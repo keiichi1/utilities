@@ -3,6 +3,8 @@ import json
 import requests
 import yaml
 import socket
+import time
+import shutil
 from contextlib import contextmanager
 
 
@@ -35,16 +37,43 @@ def train_notifier(title=None):
 
     try:
         yield
-    finally:
+        if title is not None:
+            send_slack("{}の学習が完了しました".format(title))
+        else:
+            send_slack("学習が完了しました")
+
+    except:
+        import traceback
+        traceback.print_exc()
         if title is not None:
             send_slack("{}の学習が失敗しました".format(title))
         else:
             send_slack("学習が失敗しました")
 
-    if title is not None:
-        send_slack("{}の学習が完了しました".format(title))
+
+@contextmanager
+def lap_timer():
+    start = time.time()
+
+    yield
+
+    laptime = time.time() - start
+    print("Lap Time: {}".format(laptime))
+
+
+def make_directory(directory_path):
+    directory_path = Path(directory_path)
+
+    if not directory_path.exists():
+        directory_path.mkdir(parents=True, exist_ok=True)
     else:
-        send_slack("学習が完了しました")
+        print("既にディレクトリが存在します")
+
+def get_path_list(directory_path):
+    ROOT_PATH = Path(directory_path)
+    file_list = ROOT_PATH.glob("*")
+    return file_list
+
 
 
 if __name__ == "__main__":
