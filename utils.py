@@ -69,11 +69,25 @@ def make_directory(directory_path):
     else:
         print("既にディレクトリが存在します")
 
+
 def get_path_list(directory_path):
     ROOT_PATH = Path(directory_path)
     file_list = ROOT_PATH.glob("*")
     return file_list
 
+
+class CharacterSeparater:
+    def each_number(self, row: str, num: int)->list:
+        """
+        文字列を指定した数で区切る
+        args:
+            row: 区切りたい文字列
+            num: 区切りたい文字数
+        return:
+            separate_list: 指定した文字数で区切った文字を要素とするリスト
+        """
+        separate_list = [row[i: i+num] for i in range(0, len(row), num)]
+        return separate_list
 
 
 if __name__ == "__main__":
